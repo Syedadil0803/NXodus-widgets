@@ -256,7 +256,14 @@
 
       document.body.style.setProperty('--cw-bar-height', BAR_HEIGHT + 'px');
       document.body.classList.add('cw-has-announcement-bar');
-      document.body.classList.remove('cw-should-offset-fixed');
+      var scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+      var slotTop = slotElement.getBoundingClientRect().top + scrollTop;
+      var TOP_ZONE_THRESHOLD = 140;
+      if (slotTop <= TOP_ZONE_THRESHOLD) {
+        document.body.classList.add('cw-should-offset-fixed');
+      } else {
+        document.body.classList.remove('cw-should-offset-fixed');
+      }
     });
   }
 
