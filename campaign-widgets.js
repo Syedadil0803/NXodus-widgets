@@ -180,6 +180,7 @@
 
   function renderAnnouncementBar(config) {
     if (!shouldShow(config)) return;
+    if (document.getElementById('cw-announcement-bar')) return;
 
     var announcements = config.announcements;
     if (!announcements || announcements.length === 0) return;
