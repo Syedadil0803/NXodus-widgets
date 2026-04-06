@@ -172,10 +172,10 @@
       if (target) {
         target.innerHTML = '';
         target.appendChild(bar);
-        return true;
+        return target;
       }
     }
-    return false;
+    return null;
   }
 
   function renderAnnouncementBar(config) {
@@ -240,7 +240,8 @@
     bar.appendChild(track);
 
     // Insert into page only if slot exists
-    if (!mountAnnouncementBar(bar, config)) {
+    var slotElement = mountAnnouncementBar(bar, config);
+    if (!slotElement) {
       console.warn('[Campaign Widgets] Announcement slot not found. Add ' + ANNOUNCEMENT_SLOT_SELECTOR + ' to your page.');
       return;
     }
@@ -255,6 +256,14 @@
 
       document.body.style.setProperty('--cw-bar-height', BAR_HEIGHT + 'px');
       document.body.classList.add('cw-has-announcement-bar');
+      var scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+      var slotTop = slotElement.getBoundingClientRect().top + scrollTop;
+      var TOP_ZONE_THRESHOLD = 140;
+      if (slotTop <= TOP_ZONE_THRESHOLD) {
+        document.body.classList.add('cw-should-offset-fixed');
+      } else {
+        document.body.classList.remove('cw-should-offset-fixed');
+      }
 
       // Throttle scroll handler for better performance
       var scrollTimeout = null;
