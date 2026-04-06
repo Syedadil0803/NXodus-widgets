@@ -72,7 +72,7 @@ body.cw-has-announcement-bar .rd-navbar-fixed .rd-navbar-panel {
 }
 
 body.cw-has-announcement-bar .rd-navbar-fixed .rd-navbar-nav-wrap {
-  top: calc(var(--cw-bar-height, 0px) - 56px);
+  top: max(0px, calc(var(--cw-bar-height, 0px) - 56px));
 }
 
 body.cw-has-announcement-bar .rd-navbar-fixed [class*='rd-navbar-fixed-element'] {
