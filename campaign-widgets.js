@@ -18,6 +18,8 @@
   // ---- Configuration ----
   const CONFIG_URL = window.CW_CONFIG_URL || 'https://cdn.aairavx.com/campaign-config.json';
   const MARQUEE_SPEED = 60; // pixels per second
+  const ANNOUNCEMENT_SLOT_SELECTOR = window.CW_ANNOUNCEMENT_SLOT_SELECTOR || '.cw-announcement-slot';
+  const ENABLE_PROMO_CARD = window.CW_ENABLE_PROMO_CARD !== false;
 
   // ---- Utility Functions ----
 
@@ -161,6 +163,21 @@
 
   // ---- Announcement Bar (Marquee Ticker) ----
 
+  function mountAnnouncementBar(bar, config) {
+    var target = null;
+    
+    // Dedicated placeholder section/div (e.g. <section class="cw-announcement-slot"></section>)
+    if (typeof ANNOUNCEMENT_SLOT_SELECTOR === 'string' && ANNOUNCEMENT_SLOT_SELECTOR.trim()) {
+      target = document.querySelector(ANNOUNCEMENT_SLOT_SELECTOR.trim());
+      if (target) {
+        target.innerHTML = '';
+        target.appendChild(bar);
+        return true;
+      }
+    }
+    return false;
+  }
+
   function renderAnnouncementBar(config) {
     if (!shouldShow(config)) return;
 
@@ -222,8 +239,11 @@
 
     bar.appendChild(track);
 
-    // Insert into page
-    document.body.prepend(bar);
+    // Insert into page only if slot exists
+    if (!mountAnnouncementBar(bar, config)) {
+      console.warn('[Campaign Widgets] Announcement slot not found. Add ' + ANNOUNCEMENT_SLOT_SELECTOR + ' to your page.');
+      return;
+    }
 
     // Bar height is fixed at 40px via CSS — use constant instead of measuring
     var BAR_HEIGHT = 40;
@@ -473,7 +493,7 @@
         }
 
         // Render promo card
-        if (data.promoCard) {
+        if (ENABLE_PROMO_CARD && data.promoCard) {
           renderPromoCard(data.promoCard);
         }
       })
