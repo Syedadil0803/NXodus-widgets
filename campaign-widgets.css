@@ -12,7 +12,7 @@
 .cw-announcement-bar {
   position: relative;
   width: 100%;
-  z-index: 99999;
+  z-index: var(--cw-bar-z-index, 10);
   display: flex;
   align-items: center;
   height: 40px;
@@ -69,34 +69,6 @@
 .cw-announcement-bar strong,
 .cw-announcement-bar b {
   font-weight: 700;
-}
-
-/* Auto offset for common headers when slot is in top zone */
-body.cw-has-announcement-bar.cw-should-offset-fixed .rd-navbar-fixed .rd-navbar-panel {
-  top: var(--cw-bar-height, 0px);
-}
-
-body.cw-has-announcement-bar.cw-should-offset-fixed .rd-navbar-fixed .rd-navbar-nav-wrap {
-  top: max(0px, calc(var(--cw-bar-height, 0px) - 56px));
-}
-
-body.cw-has-announcement-bar.cw-should-offset-fixed .rd-navbar-fixed [class*='rd-navbar-fixed-element'] {
-  top: calc(var(--cw-bar-height, 0px) + 4px);
-}
-
-body.cw-has-announcement-bar.cw-should-offset-fixed .rd-navbar-fixed .rd-navbar-collapse {
-  top: calc(var(--cw-bar-height, 0px) + 56px);
-}
-
-body.cw-has-announcement-bar.cw-should-offset-fixed .rd-navbar-fixed .rd-navbar-search .rd-search {
-  top: calc(var(--cw-bar-height, 0px) + 56px);
-}
-
-body.cw-has-announcement-bar.cw-should-offset-fixed #myHeader,
-body.cw-has-announcement-bar.cw-should-offset-fixed .header-area,
-body.cw-has-announcement-bar.cw-should-offset-fixed .cw-offset-by-bar,
-body.cw-has-announcement-bar.cw-should-offset-fixed [data-cw-offset-bar] {
-  top: var(--cw-bar-height, 0px) !important;
 }
 
 /* ---------- Promo Card ---------- */
