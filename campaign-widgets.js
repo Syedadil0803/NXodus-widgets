@@ -261,7 +261,29 @@
       var TOP_ZONE_THRESHOLD = 140;
       if (slotTop <= TOP_ZONE_THRESHOLD) {
         document.body.classList.add('cw-should-offset-fixed');
+
+        // Collapse reserved top space as the bar scrolls away.
+        var scrollTimeout = null;
+        var lastScrollY = -1;
+
+        function updateTopBarSpace() {
+          var y = window.pageYOffset || document.documentElement.scrollTop;
+          if (y === lastScrollY) return;
+          var visibleBarHeight = Math.max(0, BAR_HEIGHT - y);
+          document.body.style.setProperty('--cw-bar-height', visibleBarHeight + 'px');
+          lastScrollY = y;
+        }
+
+        updateTopBarSpace();
+        window.addEventListener('scroll', function () {
+          if (scrollTimeout) return;
+          scrollTimeout = setTimeout(function () {
+            updateTopBarSpace();
+            scrollTimeout = null;
+          }, 16);
+        }, { passive: true });
       } else {
+        document.body.style.setProperty('--cw-bar-height', BAR_HEIGHT + 'px');
         document.body.classList.remove('cw-should-offset-fixed');
       }
     });
