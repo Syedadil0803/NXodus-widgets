@@ -87,6 +87,18 @@ body.cw-has-announcement-bar .rd-navbar-fixed .rd-navbar-search .rd-search {
   top: calc(var(--cw-bar-height, 0px) + 56px);
 }
 
+/* Generic fixed/sticky header support for non-RD-navbar websites */
+body.cw-has-announcement-bar #myHeader,
+body.cw-has-announcement-bar .header-area {
+  top: var(--cw-bar-height, 0px) !important;
+}
+
+/* Universal opt-in: works for any tag if client adds class/attribute */
+body.cw-has-announcement-bar .cw-offset-by-bar,
+body.cw-has-announcement-bar [data-cw-offset-bar] {
+  top: var(--cw-bar-height, 0px) !important;
+}
+
 /* ---------- Promo Card ---------- */
 .cw-promo-card {
   position: fixed;
