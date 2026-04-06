@@ -264,29 +264,6 @@
       } else {
         document.body.classList.remove('cw-should-offset-fixed');
       }
-
-      // Throttle scroll handler for better performance
-      var scrollTimeout = null;
-      var lastScrollY = 0;
-      
-      function updateBarOffset() {
-        var scrollY = window.pageYOffset || document.documentElement.scrollTop;
-        if (scrollY !== lastScrollY) {
-          var visibleBarHeight = Math.max(0, BAR_HEIGHT - scrollY);
-          document.body.style.setProperty('--cw-bar-height', visibleBarHeight + 'px');
-          lastScrollY = scrollY;
-        }
-      }
-      
-      // Adjust navbar offset as bar scrolls out of view (throttled)
-      window.addEventListener('scroll', function () {
-        if (!scrollTimeout) {
-          scrollTimeout = setTimeout(function() {
-            updateBarOffset();
-            scrollTimeout = null;
-          }, 16); // ~60fps
-        }
-      }, { passive: true });
     });
   }
 
