@@ -21,6 +21,9 @@
   const ANNOUNCEMENT_SLOT_SELECTOR = window.CW_ANNOUNCEMENT_SLOT_SELECTOR || '.cw-announcement-slot';
   const ENABLE_PROMO_CARD = window.CW_ENABLE_PROMO_CARD !== false;
 
+  // SessionStorage key for caching the config (persists until tab/browser closes)
+  const CACHE_KEY = 'cw_config_cache';
+
   // ---- Utility Functions ----
 
   /**
@@ -483,7 +486,35 @@
 
   // ---- Main: Fetch config & initialize ----
 
+  /**
+   * Render widgets from the config data
+   */
+  function renderWidgets(data) {
+    // Render announcement bar
+    if (data.announcementBar) {
+      renderAnnouncementBar(data.announcementBar);
+    }
+
+    // Render promo card
+    if (ENABLE_PROMO_CARD && data.promoCard) {
+      renderPromoCard(data.promoCard);
+    }
+  }
+
   function init() {
+    // Check sessionStorage for cached config
+    try {
+      var cached = sessionStorage.getItem(CACHE_KEY);
+      if (cached) {
+        var data = JSON.parse(cached);
+        renderWidgets(data);
+        return; // Skip API call
+      }
+    } catch (e) {
+      // sessionStorage unavailable or corrupted — fall through to fetch
+    }
+
+    // No cache — fetch from API
     fetch(CONFIG_URL, {
       cache: 'no-cache',
       headers: { 'Accept': 'application/json' },
@@ -495,16 +526,14 @@
         return response.json();
       })
       .then(function (data) {
-
-        // Render announcement bar
-        if (data.announcementBar) {
-          renderAnnouncementBar(data.announcementBar);
+        // Store in sessionStorage for the rest of this session
+        try {
+          sessionStorage.setItem(CACHE_KEY, JSON.stringify(data));
+        } catch (e) {
+          // Storage full or unavailable — continue without caching
         }
 
-        // Render promo card
-        if (ENABLE_PROMO_CARD && data.promoCard) {
-          renderPromoCard(data.promoCard);
-        }
+        renderWidgets(data);
       })
       .catch(function (error) {
         console.warn('[Campaign Widgets] Could not load campaign config:', error.message);
